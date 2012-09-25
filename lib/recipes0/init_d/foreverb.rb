@@ -39,7 +39,7 @@ Capistrano::Configuration.instance.load do
       end
 
       if ( ! fetch(:skip_foreverb_auto_actions, false))
-	 after 'deploy:restart', ':restart'
+	 after 'deploy:restart', 'foreverb:restart'
 	 after 'deploy', 'foreverb:create_start_script'
 	 after 'deploy:setup', 'foreverb:create_start_script'
       end
