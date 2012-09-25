@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = Recipes0::Version
   s.authors = ["Alexey Illarionov"]
   s.email = ["littlesavage@rambler.ru"]
-  s.homepage = ""
+  s.homepage = "https://github.com/BrandyMint/capistrano-recipes0.git"
   s.summary = %q{Наши рецепты для капистраны}
   s.description = %q{Наши рецепты для капистраны}
 
