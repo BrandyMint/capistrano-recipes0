@@ -1,0 +1,103 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          unicorn<%= application.tr(' -.', '') + rails_env %>
+# Required-Start:    $local_fs $remote_fs $named $network $time
+# Required-Stop:     $local_fs $remote_fs $named $network
+# Should-Start:	     $syslog $postgresql $mysql
+# X-Start-Before:    $monit
+# X-Stop-After:      $monit
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= application %> unicorn initscript
+# Description:       unicorn
+### END INIT INFO
+
+set -e
+set -u
+APP_USER=${APP_USER:-<%= user %>}
+APP_ENV=${APP_ENV:-<%= rails_env %>}
+APP_ROOT=${APP_ROOT:-<%= current_path %>}
+CONFIG=<%= "#{current_path}/config/unicorn.rb" %>
+PIDS_ROOT=<%= "#{shared_path}/pids" %>
+PID=${PIDS_ROOT}/unicorn.pid
+TIMEOUT=${TIMEOUT-60}
+CMD="cd $APP_ROOT; APP_ROOT=$APP_ROOT RAILS_ENV=$APP_ENV bundle exec unicorn -E $APP_ENV -D -c $CONFIG"
+action="$1"
+
+old_pid="$PID.oldbin"
+
+cd $APP_ROOT || exit 1
+
+sig () {
+  test -s "$PID" && kill -$1 `cat $PID`
+}
+
+oldsig () {
+  test -s $old_pid && kill -$1 `cat $old_pid`
+}
+
+workersig () {
+  workerpid="$PIDS_ROOT/unicorn.$2.pid"
+  test -s "$workerpid" && kill -$1 `cat $workerpid`
+}
+
+my_su () {
+   if [ `whoami` != $APP_USER ]; then
+	su -l $APP_USER -s /bin/bash -c "$@"
+   else
+	/bin/bash -l -c "$@"
+   fi
+}
+
+
+case $action in
+start)
+  sig 0 && echo >&2 "Already running" && exit 0
+  my_su "$CMD"
+  ;;
+stop)
+  sig QUIT && exit 0
+  echo >&2 "Not running"
+  ;;
+force-stop|force_stop)
+  sig TERM && exit 0
+  echo >&2 "Not running"
+  ;;
+restart|reload)
+  sig HUP && echo reloaded OK && exit 0
+  echo >&2 "Couldn't reload, starting '$CMD' instead"
+  my_su "$CMD"
+  ;;
+upgrade)
+  if sig USR2 && sleep 20 && sig 0 && oldsig QUIT
+  then
+    n=$TIMEOUT
+    while test -s $old_pid && test $n -ge 0
+    do
+      printf '.' && sleep 1 && n=$(( $n - 1 ))
+    done
+    echo
+
+    if test $n -lt 0 && test -s $old_pid
+    then
+      echo >&2 "$old_pid still exists after $TIMEOUT seconds"
+      exit 1
+    fi
+    exit 0
+  fi
+  echo >&2 "Couldn't upgrade, starting '$CMD' instead"
+  my_su "$CMD"
+  ;;
+kill_worker)
+  workersig QUIT $2 && exit 0
+  echo >&2 "Worker not running"
+  ;;
+
+reopen-logs|reopen_logs)
+  sig USR1
+  ;;
+*)
+  echo >&2 "Usage: $0 <start|stop|restart|upgrade|force_stop|reopen_logs>"
+  exit 1
+  ;;
+esac

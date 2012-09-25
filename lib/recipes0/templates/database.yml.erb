@@ -1,0 +1,21 @@
+base: &base
+  adapter: postgresql
+  encoding: unicode
+  pool: 2
+  port: 5432
+
+development:
+  <<: *base
+  database: <%= application.tr(' -.', '') %>_development
+
+test:
+  <<: *base
+  database: <%= application.tr(' -.', '') %>_test
+
+production:
+  <<: *base
+  database: <%= application.tr(' -.', '') %>_production
+  pool: 5
+  username: <%= user %>
+  password: <%= Capistrano::CLI.ui.ask('Enter Postgresql database password: ') %>
+

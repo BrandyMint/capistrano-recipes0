@@ -1,0 +1,50 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          foreverb<%= application.tr(' -.', '') + rails_env %>
+# Required-Start:    $local_fs $remote_fs $named $network $time
+# Required-Stop:     $local_fs $remote_fs $named $network
+# Should-Start:	     $syslog $postgresql $mysql
+# X-Start-Before:    $monit
+# X-Stop-After:      $monit
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= application %> foreverb initscript
+# Description:       foreverb
+### END INIT INFO
+
+# Do NOT "set -e"
+
+APP_USER="<%= user %>"
+APP_ENV=${APP_ENV:-<%= rails_env %>}
+APP_ROOT=${APP_ROOT:-<%= current_path %>}
+CMD="cd $APP_ROOT; RAILS_ENV=$APP_ENV bundle exec ./script/foreverb-cron"
+
+my_su () {
+   if [ `whoami` != $APP_USER ]; then
+	su -l $APP_USER -s /bin/bash -c "$@"
+   else
+	/bin/bash -l -c "$@"
+   fi
+}
+
+case "$1" in
+  start|stop|restart)
+      my_su "$CMD $1"
+  ;;
+  force-stop|force_stop)
+      my_su "$CMD kill"
+  ;;
+  show_config|show-config)
+     my_su "$CMD show"
+  ;;
+  update_config|update-config)
+     my_su "$CMD update"
+  ;;
+  *)
+  echo "Usage: $0 <start|stop|restart|force_stop|show_config|update_config>" >&2
+  exit 3
+  ;;
+esac
+
+:
+
