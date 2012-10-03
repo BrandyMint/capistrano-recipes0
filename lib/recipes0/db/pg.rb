@@ -52,7 +52,7 @@ Capistrano::Configuration.instance.load do
       end
 
       desc <<-DESC
-      Сохраняет базу со стейджа в файл (реплику).
+      Сохраняет базу - реплику со стейджа в файл.
 
       Параметры:
        replica_db_env - окружение, учетные данные которого будут
@@ -86,7 +86,7 @@ Capistrano::Configuration.instance.load do
       end #task :download
 
       desc <<-DESC
-      Загружает удаленную базу (реплику) в локальную.
+      Загружает базу - реплику со стейджа в локальную базу.
 
       Учетные данные для подключения к локальной БД читаются
       из локального файла config/database.yml окружения ENV['RAILS_ENV'].
@@ -137,7 +137,7 @@ Capistrano::Configuration.instance.load do
       _cset(:src_rails_env) { replica_db_env }
       _cset(:dst_rails_env) { rails_env }
       desc <<-DESC
-      Пересоздать на стейдже базу из реплики.
+      Пересоздает на стейдже базу из реплики.
 
       Параметры:
        src_rails_env -  Окружение, учетные данные которого будут
@@ -202,7 +202,7 @@ Capistrano::Configuration.instance.load do
       namespace :cur do
 
 	 desc <<-DESC
-	 Сохранить текущую базу со стейджа в файл.
+	 Сохраняет рабочую базу со стейджа в файл.
 
 	 Параметры:
 	 full_dump      - Снять полный дамп вместо урезанного
@@ -217,7 +217,7 @@ Capistrano::Configuration.instance.load do
 	 end
 
 	 desc <<-DESC
-         Загрузить удаленную базу со стейджа в локальную.
+         Загружает рабочую базу со стейджа в локальную.
 
          Учетные данные для подключения к локальной БД читаются
          из локального файла config/database.yml окружения ENV['RAILS_ENV'].
