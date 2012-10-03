@@ -19,3 +19,8 @@ production:
   username: <%= user %>
   password: <%= Capistrano::CLI.ui.ask('Enter Postgresql database password: ') %>
 
+replica:
+   <<: *base
+  database: <%= application.tr(' -.', '') %>_replica
+
+
