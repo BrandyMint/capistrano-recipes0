@@ -18,7 +18,7 @@ Capistrano::Configuration.instance.load do
 	 eval `RAILS_ENV='#{env}' DATABASE_YML='#{database_yml}' ruby -e '
 	       require "yaml";
 	       config=YAML.load_file(ENV["DATABASE_YML"])[ENV["RAILS_ENV"]];
-	       print "PGUSER=\#{config["username"]}; PGPASSWD=\#{config["password"]}; PGDATABASE=\#{config["database"]}; export PGDATABASE PGUSER PGPASSWD";
+	       print "PGUSER=\#{config["username"]}; PGPASSWD=\#{config["password"]}; PGDATABASE=\#{config["database"]}; PGHOST=\#{config["hostname"]}; export PGDATABASE PGUSER PGPASSWD PGHOST";
 	 ' `
         END
       end
