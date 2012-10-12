@@ -20,7 +20,7 @@ production:
   password: <%= Capistrano::CLI.ui.ask('Enter Postgresql database password: ') %>
 
 replica:
-   <<: *base
+  <<: *base
   database: <%= application.tr(' -.', '') %>_replica
 
 
