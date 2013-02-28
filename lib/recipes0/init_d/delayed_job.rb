@@ -17,7 +17,7 @@ Capistrano::Configuration.instance.load do
 
       _cset(:delayed_job_start_script) { "/etc/init.d/#{service_name}-#{application}" }
       desc <<-DESC
-	 Создает стартовый скрипт #{service_name.to_s.capitalize} в shared/examples
+	 Создает стартовый скрипт #{service_name.to_s.capitalize} в shared/examples.
 
 	 Шаблон скрипта должен быть в директории :templates_dir, либо config/deploy/
 	 и называться #{service_name}.sh.erb
