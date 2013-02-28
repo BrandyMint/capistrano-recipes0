@@ -9,7 +9,7 @@ Capistrano::Configuration.instance.load do
       self.extend InitDScript
 
       desc <<-DESC
-	 Создает стартовый скрипт nginx в shared/examples/nginx
+	 Создает стартовый скрипт nginx в shared/examples/nginx.
 
 	 Шаблон скрипта должен быть в директории :templates_dir, либо config/deploy/
 	 и называться nginx.conf.erb
