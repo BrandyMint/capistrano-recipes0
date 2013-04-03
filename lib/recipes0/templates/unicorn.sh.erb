@@ -21,7 +21,7 @@ CONFIG=<%= "#{current_path}/config/unicorn.rb" %>
 PIDS_ROOT=<%= "#{shared_path}/pids" %>
 PID=${PIDS_ROOT}/unicorn.pid
 TIMEOUT=${TIMEOUT-60}
-CMD="cd $APP_ROOT; APP_ROOT=$APP_ROOT RAILS_ENV=$APP_ENV bundle exec unicorn -E $APP_ENV -D -c $CONFIG"
+CMD="cd $APP_ROOT; APP_ROOT=$APP_ROOT RAILS_ENV=$APP_ENV bundle exec nohup unicorn -E $APP_ENV -D -c $CONFIG > /dev/null 2>&1 &"
 action="$1"
 
 old_pid="$PID.oldbin"
