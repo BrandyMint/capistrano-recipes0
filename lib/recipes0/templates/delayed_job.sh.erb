@@ -17,13 +17,13 @@
 APP_USER="<%= user %>"
 APP_ENV=${APP_ENV:-<%= rails_env %>}
 APP_ROOT=${APP_ROOT:-<%= current_path %>}
-CMD="cd $APP_ROOT; RAILS_ENV=$APP_ENV nohup bundle exec ./script/delayed_job > /dev/null 2>&1 &"
+CMD="cd $APP_ROOT; RAILS_ENV=$APP_ENV nohup bundle exec ./script/delayed_job"
 
 my_su () {
    if [ `whoami` != $APP_USER ]; then
-	su -l $APP_USER -s /bin/bash -c "$@"
+      su -l $APP_USER -s /bin/bash -c "$@ > /dev/null 2>&1 &"
    else
-	/bin/bash -l -c "$@"
+      /bin/bash -l -c "$@ > /dev/null 2>&1 &"
    fi
 }
 
