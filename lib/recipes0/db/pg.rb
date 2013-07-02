@@ -46,7 +46,7 @@ Capistrano::Configuration.instance.load do
 	    dump_cmd << "pg_dump -Fp -Z6 --no-privileges --no-owner #{options['pgdump_args']} --data-only --exclude-table '#{exclude_tables.join("|")}'"
 	 end
 
-	 run dump_cmd.join(' && ') do |channel, stream, data|
+	 run dump_cmd.join(' && '), :pty=>false do |channel, stream, data|
 	    yield channel, stream, data
 	 end #run
       end
@@ -194,7 +194,7 @@ Capistrano::Configuration.instance.load do
 	     )
 	END
 
-	run cmd
+	run cmd,  :pty  => false
 
       end
 
