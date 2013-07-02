@@ -27,16 +27,17 @@ module InitDScript
 
    #Компилирует стартовый скрипт в examples
    def put_start_script_2_examples(service_name)
-	 location = fetch(:templates_dir, "config/deploy") + "/#{service_name}.sh.erb"
-	 if !File.file?(location)
-	    location = File.join(File.dirname(__FILE__), "../templates", "#{service_name}.sh.erb");
-	 end
-	 template = File.read(location)
-	 config = ERB.new(template)
+         location = fetch(:templates_dir, "config/deploy") + "/#{service_name}.sh.erb"
+         if !File.file?(location)
+            location = File.join(File.dirname(__FILE__), "../templates", "#{service_name}.sh.erb");
+         end
+         template = File.read(location)
+         config = ERB.new(template)
 
-	 dst_fname = "#{service_name}-#{application}"
-	 run "mkdir -p #{shared_path}/examples/"
-	 put config.result(binding), "#{shared_path}/examples/#{dst_fname}"
+         dst_fname = "#{service_name}-#{application}"
+         run "mkdir -p #{shared_path}/examples/"
+         put config.result(binding), "#{shared_path}/examples/#{dst_fname}"
    end
 
 end
+
